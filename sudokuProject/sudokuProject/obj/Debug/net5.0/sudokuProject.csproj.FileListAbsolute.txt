@@ -1,0 +1,16 @@
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.exe
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.deps.json
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.runtimeconfig.json
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.runtimeconfig.dev.json
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.dll
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\ref\sudokuProject.dll
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\bin\Debug\net5.0\sudokuProject.pdb
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.csproj.AssemblyReference.cache
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.AssemblyInfoInputs.cache
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.AssemblyInfo.cs
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.csproj.CoreCompileInputs.cache
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.dll
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\ref\sudokuProject.dll
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.pdb
+C:\Users\zelig\OneDrive\Documents\סודוקו\sudokuProject\sudokuProject\obj\Debug\net5.0\sudokuProject.genruntimeconfig.cache
