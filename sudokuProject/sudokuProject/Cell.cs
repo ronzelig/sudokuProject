@@ -8,18 +8,27 @@ namespace sudokuProject
 {
     class Cell
     {
-        public int row { get;}
-        public int col { get; }
+        private int row;
+        private int col;
         public int square { get; }
-        public int[] options { get; set; }
-        public char value { get; set; }
+        private int[] options;
+        private char value;
 
-        public Cell(int row, int col, char value)
+        public Cell(int row, int col, char value, int dimensionSize)
         {
             this.row = row;
             this.col = col;
             this.value = value;
-            //this.square = indexToSquare(row, col);
+            square = indexToSquare(row, col, dimensionSize);
+        }
+        
+        public int indexToSquare(int row, int col, int dimensionSize)
+        {
+            int squareDimention = (int)Math.Sqrt(dimensionSize);
+            int SquareFirstRow = row - (row % squareDimention);
+            int SquareFirstCol = col - (col % squareDimention);
+            int squareNumber = SquareFirstRow + SquareFirstCol / squareDimention;
+            return squareNumber;
         }
 
         private bool isEmpty()
@@ -30,6 +39,20 @@ namespace sudokuProject
         public override string ToString()
         {
             return char.ToString(value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            //Check for null and compare types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Cell other = (Cell)obj;
+                return other.value == this.value;
+            }
         }
     }
 }
