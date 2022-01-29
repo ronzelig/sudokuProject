@@ -8,17 +8,22 @@ namespace sudokuProject
 {
     class Cell
     {
-        private int row;
-        private int col;
+        public int row { get;}
+        public int col { get;}
         public int square { get; }
-        private int[] options;
-        private char value;
+        public List<char> options { get; }
+        public char value { get; set; }
 
         public Cell(int row, int col, char value, int dimensionSize)
         {
             this.row = row;
             this.col = col;
             this.value = value;
+            options = new List<char>();
+            for(int i = 1; i<=dimensionSize; i++)
+            {
+                options.Add((char)('0'+i));
+            }
             square = indexToSquare(row, col, dimensionSize);
         }
         
@@ -31,7 +36,7 @@ namespace sudokuProject
             return squareNumber;
         }
 
-        private bool isEmpty()
+        public bool isEmpty()
         {
             return this.value == '0';
         }

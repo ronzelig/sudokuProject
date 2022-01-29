@@ -8,27 +8,26 @@ namespace sudokuProject
 {
     class Board
     {
-        private Cell[,] board;
-        private int dimensionSize;
-        private HashSet<char>[] rowsValues;
-        private HashSet<char>[] colsValues;
-        private HashSet<char>[] squaresValues;
+        public Cell[,] board { get; }
+        public int dimensionSize { get; }
+        public HashSet<char>[] rowsValues { get; set; }
+        public HashSet<char>[] colsValues { get; set; }
+        public HashSet<char>[] squaresValues { get; set; }
 
         public Board(string inputString)
         {
             dimensionSize = (int)Math.Sqrt(inputString.Length);
             board = new Cell[dimensionSize, dimensionSize];
             initHashSets();
-            char temp;
             for (int row = 0; row < dimensionSize; row++)
             {
                 for (int col = 0; col < dimensionSize; col++)
                 {
-                    temp = inputString[row * dimensionSize + col];
-                    board[row, col] = new Cell(row, col, temp, dimensionSize);
-                    rowsValues[row].Add(temp);
-                    colsValues[col].Add(temp);
-                    squaresValues[board[row,col].square].Add(temp);
+                    char tempChar = inputString[row * dimensionSize + col];
+                    board[row, col] = new Cell(row, col, tempChar, dimensionSize);
+                    rowsValues[row].Add(tempChar);
+                    colsValues[col].Add(tempChar);
+                    squaresValues[board[row,col].square].Add(tempChar);
                 }
             }
         }
