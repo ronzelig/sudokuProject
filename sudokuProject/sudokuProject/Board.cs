@@ -10,51 +10,58 @@ namespace sudokuProject
     {
         public Cell[,] board { get; }
         public int dimensionSize { get; }
-        public HashSet<char>[] rowsValues { get; set; }
-        public HashSet<char>[] colsValues { get; set; }
-        public HashSet<char>[] squaresValues { get; set; }
+        public int[,] rowsValues { get; set; }
+        public int[,] colsValues { get; set; }
+        public int[,] squaresValues { get; set; }
+        public int[,] rowsOptions { get; set; }
+        public int[,] colsOptions { get; set; }
+        public int[,] squaresOptions { get; set; }
 
         public Board(string inputString)
         {
             dimensionSize = (int)Math.Sqrt(inputString.Length);
             board = new Cell[dimensionSize, dimensionSize];
-            initHashSets();
+            initMatrixes();
             for (int row = 0; row < dimensionSize; row++)
             {
                 for (int col = 0; col < dimensionSize; col++)
                 {
                     char tempChar = inputString[row * dimensionSize + col];
-                    board[row, col] = new Cell(row, col, tempChar, dimensionSize);
-                    rowsValues[row].Add(tempChar);
-                    colsValues[col].Add(tempChar);
-                    squaresValues[board[row,col].square].Add(tempChar);
+                    board[row, col] = new Cell(row, col, tempChar, dimensionSize, this);
+                    //if (tempChar != '0')
+                    //{
+                    //    rowsValues[row].Add(tempChar);
+                    //    colsValues[col].Add(tempChar);
+                    //    squaresValues[board[row, col].square].Add(tempChar);
+                    //}
                 }
             }
         }
 
-        private void initHashSets()
+        private void initMatrixes()
         {
-            rowsValues = new HashSet<char>[dimensionSize];
-            colsValues = new HashSet<char>[dimensionSize];
-            squaresValues = new HashSet<char>[dimensionSize];
-            for(int i = 0; i<dimensionSize; i++)
-            {
-                rowsValues[i] = new HashSet<char>();
-                colsValues[i] = new HashSet<char>();
-                squaresValues[i] = new HashSet<char>();
-            }
+            rowsValues = new int[dimensionSize+1,dimensionSize+1];
+            colsValues = new int[dimensionSize+1, dimensionSize+1];
+            squaresValues = new int[dimensionSize+1, dimensionSize+1];
+            rowsOptions = new int[dimensionSize+1, dimensionSize+1];
+            colsOptions = new int[dimensionSize+1, dimensionSize+1];
+            squaresOptions = new int[dimensionSize+1, dimensionSize+1];
+            
         }
 
         public void printBoard()
         {
+            String rowLine = (new string('-', dimensionSize*4+1));
             for (int row = 0; row < dimensionSize; row++)
             {
+                Console.WriteLine(rowLine);
                 for (int col = 0; col < dimensionSize; col++)
                 {
-                    Console.Write(board[row, col]);
+                      Console.Write("| "+ (board[row, col].isEmpty()? " ": board[row,col]) +" ");
                 }
-                Console.WriteLine("");
+                Console.WriteLine("|");
             }
+            Console.WriteLine(rowLine);
         }
     }
 }
