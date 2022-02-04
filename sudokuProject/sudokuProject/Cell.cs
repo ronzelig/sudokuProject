@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    class Cell
+    class Cell: IComparable
     {
         public int row { get;}
         public int col { get;}
@@ -22,7 +22,7 @@ namespace sudokuProject
             square = indexToSquare(row, col, dimensionSize);
             options = new List<char>();
             if (value == '0')
-            {
+            {               
                 for (int i = 1; i <= dimensionSize; i++)
                 {
                     options.Add((char)('0' + i));
@@ -30,10 +30,20 @@ namespace sudokuProject
                     board.colsOptions[col, i]++;
                     board.squaresOptions[square, i]++;
                 }
+                board.emptyCells.Add(this);
             }
             board.rowsValues[row, value - '0']++;
             board.colsValues[col, value - '0']++;
             board.squaresValues[square, value - '0']++;
+        }
+
+        public Cell(Cell other)
+        {
+            row = other.row;
+            col = other.col;
+            square = other.square;
+            options = other.options.ToList();         
+            value = other.value;
         }
         
         public int indexToSquare(int row, int col, int dimensionSize)
@@ -68,5 +78,12 @@ namespace sudokuProject
                 return other.value == this.value;
             }
         }
+
+        public int CompareTo(object obj)
+        {
+            Cell other = (Cell)obj;
+            return options.Count - other.options.Count;
+        }
+
     }
 }

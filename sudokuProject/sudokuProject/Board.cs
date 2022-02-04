@@ -9,6 +9,7 @@ namespace sudokuProject
     class Board
     {
         public Cell[,] board { get; }
+        public List<Cell> emptyCells { get; }
         public int dimensionSize { get; }
         public int[,] rowsValues { get; set; }
         public int[,] colsValues { get; set; }
@@ -22,6 +23,7 @@ namespace sudokuProject
             dimensionSize = (int)Math.Sqrt(inputString.Length);
             board = new Cell[dimensionSize, dimensionSize];
             initMatrixes();
+            emptyCells = new List<Cell>();
             for (int row = 0; row < dimensionSize; row++)
             {
                 for (int col = 0; col < dimensionSize; col++)
@@ -31,6 +33,26 @@ namespace sudokuProject
                 }
             }
         }
+
+        public Board(Board other)
+        {
+            dimensionSize = other.dimensionSize;
+            rowsValues = (int[,])other.rowsValues.Clone();
+            colsValues = (int[,])other.colsValues.Clone();
+            squaresValues = (int[,])other.squaresValues.Clone();
+            rowsOptions = (int[,])other.rowsOptions.Clone();
+            colsOptions = (int[,])other.colsOptions.Clone();
+            squaresOptions = (int[,])other.squaresOptions.Clone();
+            board = new Cell[dimensionSize, dimensionSize];
+            emptyCells = new List<Cell>();
+            foreach(Cell cell in other.board)
+            {
+                board[cell.row, cell.col] = new Cell(cell);
+                if (cell.isEmpty())
+                    emptyCells.Add(board[cell.row, cell.col]);
+            }
+        }
+
 
         private void initMatrixes()
         {
@@ -57,7 +79,6 @@ namespace sudokuProject
             }
             Console.WriteLine(rowLine);
         }
-
 
     }
 }

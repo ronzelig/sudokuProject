@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,8 @@ namespace sudokuProject
         public static bool nakedSingle(Board sudokuBoard)
         {
             bool eliminatedOptions = false;
-            foreach (Cell cell in sudokuBoard.board)
+            foreach (Cell cell in sudokuBoard.emptyCells.ToList())
             {
-                if (cell.isEmpty())
-                {
                     foreach (char option in cell.options.ToList())
                     {
                         if (sudokuBoard.rowsValues[cell.row, option-'0']!=0 || 
@@ -31,6 +30,7 @@ namespace sudokuProject
                     if (cell.options.Count == 1)
                     {
                         cell.value = cell.options[0];
+                        sudokuBoard.emptyCells.Remove(cell);
                         sudokuBoard.rowsValues[cell.row, cell.value - '0']++;
                         sudokuBoard.colsValues[cell.col, cell.value - '0']++;
                         sudokuBoard.squaresValues[cell.square, cell.value - '0']++;
@@ -38,7 +38,6 @@ namespace sudokuProject
                         sudokuBoard.colsValues[cell.col, 0]--;
                         sudokuBoard.squaresValues[cell.square, 0]--;
                     }
-                }
             }
             return eliminatedOptions;
         }
@@ -46,10 +45,8 @@ namespace sudokuProject
         public static bool hiddenSingle(Board sudokuBoard)
         {
             bool foundHidden = false;
-            foreach(Cell cell in sudokuBoard.board)
+            foreach(Cell cell in sudokuBoard.emptyCells.ToList())
             {
-                if (cell.isEmpty())
-                {
                     foreach(char option in cell.options.ToList())
                     {
                         if (sudokuBoard.rowsOptions[cell.row,option-'0'] == 1 ||
@@ -57,6 +54,7 @@ namespace sudokuProject
                             sudokuBoard.squaresOptions[cell.square,option-'0'] == 1)
                         {
                             cell.value = option;
+                            sudokuBoard.emptyCells.Remove(cell);
                             sudokuBoard.rowsValues[cell.row, option - '0']++;
                             sudokuBoard.colsValues[cell.col, option - '0']++;
                             sudokuBoard.squaresValues[cell.square, option - '0']++;
@@ -76,48 +74,73 @@ namespace sudokuProject
                             }
                             break;
                         }
-                    }
-                }
+                    }                
             }
             return foundHidden;
         }
-        public static bool backTracking(Board sudokuBoard)
+        public static Board backTracking(Board sudokuBoard)
         {
-            Cell cell = findEmptyCell(sudokuBoard);
-            if (cell == null) 
-                return true;
-            foreach(char option in cell.options)
+            bool b1, b2;           
+            if (sudokuBoard.emptyCells.Count == 0)
+            {
+                sudokuBoard.printBoard();
+                return sudokuBoard;
+            }
+            sudokuBoard.emptyCells.Sort();
+            Cell cell = sudokuBoard.emptyCells[0];
+            foreach (char option in cell.options.ToList())
             {
                 if (sudokuBoard.rowsValues[cell.row, option - '0'] == 0 &&
                     sudokuBoard.colsValues[cell.col, option - '0'] == 0 &&
                     sudokuBoard.squaresValues[cell.square, option - '0'] == 0)
                 {
-                    cell.value = option;
-                    sudokuBoard.rowsValues[cell.row, option - '0']++;
-                    sudokuBoard.colsValues[cell.col, option - '0']++;
-                    sudokuBoard.squaresValues[cell.square, option - '0']++;
-                    if (Solver.backTracking(sudokuBoard))
-                        return true;
-                    else
+                    Board clone = new Board(sudokuBoard);
+                    Cell CloneCell = clone.board[cell.row, cell.col];
+                    CloneCell.value = option;
+                    clone.rowsValues[CloneCell.row, option - '0']++;
+                    clone.colsValues[CloneCell.col, option - '0']++;
+                    clone.squaresValues[CloneCell.square, option - '0']++;
+                    clone.emptyCells.Remove(CloneCell);
+                    foreach (char optionToDelete in CloneCell.options)
                     {
-                        sudokuBoard.rowsValues[cell.row, option - '0']--;
-                        sudokuBoard.colsValues[cell.col, option - '0']--;
-                        sudokuBoard.squaresValues[cell.square, option - '0']--;
+                        if (optionToDelete != CloneCell.value)
+                        {
+                            clone.rowsOptions[CloneCell.row, optionToDelete - '0']--;
+                            clone.colsOptions[CloneCell.col, optionToDelete - '0']--;
+                            clone.squaresOptions[CloneCell.square, optionToDelete - '0']--;
+                            //cell.options.Remove(optionToDelete);
+                        }
                     }
+                    do
+                    {
+                        b1 = Solver.nakedSingle(clone);
+                        b2 = Solver.hiddenSingle(clone);
+                    }
+                    while (b1 || b2);
+                    if (Solver.backTracking(clone) != null)
+                    {
+                        return clone;
+                    }
+                    //else
+                    //{
+                    //    sudokuBoard.rowsValues[cell.row, option - '0']--;
+                    //    sudokuBoard.colsValues[cell.col, option - '0']--;
+                    //    sudokuBoard.squaresValues[cell.square, option - '0']--;
+                    //}
                 }
-            }            
-            cell.value = '0';
-            return false;            
+            }
+            //cell.value = '0';
+            return null;            
         }
 
-        private static Cell findEmptyCell(Board sudokuBoard)
-        {
-            foreach(Cell cell in sudokuBoard.board)
-            {
-                if (cell.isEmpty())
-                    return cell;
-            }
-            return null;
-        }
+        //private static Cell findEmptyCell(Board sudokuBoard)
+        //{
+        //    foreach(Cell cell in sudokuBoard.board)
+        //    {
+        //        if (cell.isEmpty())
+        //            return cell;
+        //    }
+        //    return null;
+        //}
     }
 }
