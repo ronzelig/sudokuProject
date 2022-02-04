@@ -28,12 +28,6 @@ namespace sudokuProject
                 {
                     char tempChar = inputString[row * dimensionSize + col];
                     board[row, col] = new Cell(row, col, tempChar, dimensionSize, this);
-                    //if (tempChar != '0')
-                    //{
-                    //    rowsValues[row].Add(tempChar);
-                    //    colsValues[col].Add(tempChar);
-                    //    squaresValues[board[row, col].square].Add(tempChar);
-                    //}
                 }
             }
         }
@@ -63,5 +57,7 @@ namespace sudokuProject
             }
             Console.WriteLine(rowLine);
         }
+
+
     }
 }

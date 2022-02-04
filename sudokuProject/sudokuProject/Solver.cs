@@ -8,7 +8,7 @@ namespace sudokuProject
 {
     static class Solver
     {
-        public static bool nakedSingleSolver(Board sudokuBoard)
+        public static bool nakedSingle(Board sudokuBoard)
         {
             bool eliminatedOptions = false;
             foreach (Cell cell in sudokuBoard.board)
@@ -37,16 +37,13 @@ namespace sudokuProject
                         sudokuBoard.rowsValues[cell.row, 0]--;
                         sudokuBoard.colsValues[cell.col, 0]--;
                         sudokuBoard.squaresValues[cell.square, 0]--;
-                        //sudokuBoard.rowsOptions[cell.row, cell.value - '0']--;
-                        //sudokuBoard.colsOptions[cell.col, cell.value - '0']--;
-                        //sudokuBoard.squaresOptions[cell.square, cell.value - '0']--;
                     }
                 }
             }
             return eliminatedOptions;
         }
 
-        public static bool hiddenSingleSolver(Board sudokuBoard)
+        public static bool hiddenSingle(Board sudokuBoard)
         {
             bool foundHidden = false;
             foreach(Cell cell in sudokuBoard.board)
@@ -83,6 +80,44 @@ namespace sudokuProject
                 }
             }
             return foundHidden;
+        }
+        public static bool backTracking(Board sudokuBoard)
+        {
+            Cell cell = findEmptyCell(sudokuBoard);
+            if (cell == null) 
+                return true;
+            foreach(char option in cell.options)
+            {
+                if (sudokuBoard.rowsValues[cell.row, option - '0'] == 0 &&
+                    sudokuBoard.colsValues[cell.col, option - '0'] == 0 &&
+                    sudokuBoard.squaresValues[cell.square, option - '0'] == 0)
+                {
+                    cell.value = option;
+                    sudokuBoard.rowsValues[cell.row, option - '0']++;
+                    sudokuBoard.colsValues[cell.col, option - '0']++;
+                    sudokuBoard.squaresValues[cell.square, option - '0']++;
+                    if (Solver.backTracking(sudokuBoard))
+                        return true;
+                    else
+                    {
+                        sudokuBoard.rowsValues[cell.row, option - '0']--;
+                        sudokuBoard.colsValues[cell.col, option - '0']--;
+                        sudokuBoard.squaresValues[cell.square, option - '0']--;
+                    }
+                }
+            }            
+            cell.value = '0';
+            return false;            
+        }
+
+        private static Cell findEmptyCell(Board sudokuBoard)
+        {
+            foreach(Cell cell in sudokuBoard.board)
+            {
+                if (cell.isEmpty())
+                    return cell;
+            }
+            return null;
         }
     }
 }
