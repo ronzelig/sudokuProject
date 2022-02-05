@@ -21,6 +21,7 @@ namespace sudokuProject
 
         public Board(string inputString)
         {
+            BoardValidator.validateInput(inputString);
             dimensionSize = (int)Math.Sqrt(inputString.Length);
             board = new Cell[dimensionSize, dimensionSize];
             initMatrixes();
@@ -33,6 +34,7 @@ namespace sudokuProject
                     board[row, col] = new Cell(row, col, tempChar, dimensionSize, this);
                 }
             }
+            BoardValidator.validateBoard(this);
         }
 
         public Board(Board other)

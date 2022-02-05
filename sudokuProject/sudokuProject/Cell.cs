@@ -63,6 +63,13 @@ namespace sudokuProject
             return this.value == '0';
         }
 
+        public bool isLegalValue(char val, Board board)
+        {
+            return board.rowsValues[row, val - '0'] == 0 &&
+                    board.colsValues[col, val - '0'] == 0 &&
+                    board.squaresValues[square, val - '0'] == 0;
+        }
+
         public override string ToString()
         {
             return char.ToString(value);

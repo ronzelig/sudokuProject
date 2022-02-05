@@ -16,7 +16,7 @@ namespace sudokuProject
             {
                     foreach (char option in cell.options.ToList())
                     {
-                        if (optionNotLegal(option, cell, sudokuBoard))
+                        if (!cell.isLegalValue(option, sudokuBoard))
                         {
                             deleteOption(option, cell, sudokuBoard);
                             eliminatedOptions = true;
@@ -113,11 +113,5 @@ namespace sudokuProject
                     board.squaresOptions[cell.square, option - '0'] == 1;
         }
 
-        public static bool optionNotLegal(char option, Cell cell, Board board)
-        {
-            return  board.rowsValues[cell.row, option - '0'] != 0 ||
-                    board.colsValues[cell.col, option - '0'] != 0 ||
-                    board.squaresValues[cell.square, option - '0'] != 0;
-        }
     }
 }
