@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    class ConsoleReader: Reader
+    public class ConsoleReader: Reader
     {
         const string REQUEST_BOARD = "Please enter board in one line:";
         /// <summary>

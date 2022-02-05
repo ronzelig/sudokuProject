@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    class Board
+    public class Board
     {
         public Cell[,] board { get; }
         public List<Cell> emptyCells { get; }
@@ -104,6 +104,14 @@ namespace sudokuProject
             result += (rowLine);
             return result;
         }
-
+        public string toStringOneLine()
+        {
+            string result = "";
+            foreach(Cell cell in board)
+            {
+                result += cell.value;
+            }
+            return result;
+        }
     }
 }

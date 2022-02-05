@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    static class Controller
+    public static class Controller
     {
         const string MENU_MESSAGE = "Please enter:\n" +
                                     "c - for console solver\n" +
@@ -26,14 +26,14 @@ namespace sudokuProject
             switch (answer)
             {
                 case "c":
-                    ConsoleReader cReader= new ConsoleReader();
-                    boardInput = cReader.getBoard();
-                    Controller.startSolving(boardInput);
+                    ConsoleReader cReader= new ConsoleReader();                   
+                    boardInput = cReader.getBoard();                
+                    Controller.startSolving(boardInput, "c");
                     break;
                 case "f":
                     FileReader fReader = new FileReader();
-                    boardInput = fReader.getBoard();
-                    Controller.startSolving(boardInput);
+                    boardInput = fReader.getBoard(); 
+                    Controller.startSolving(boardInput, "f");
                     break;
                 case "e":
                     break;
@@ -43,8 +43,11 @@ namespace sudokuProject
                     break;
             }
         }
-
-        private static void startSolving(string boardInput)
+        /// <summary>
+        /// creates a board using the user's input and tries to solve the sudoku
+        /// </summary>
+        /// <param name="boardInput"> the user's board input as a string </param>
+        public static void startSolving(string boardInput, string method)
         {
             try
             {
@@ -52,9 +55,9 @@ namespace sudokuProject
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 Board solution = Solver.solve(board);
-                if (solution == null)
+                if (solution == null) //solving methind could not solve the board
                     throw new ArgumentException("error: unsolvable board");
-                Console.WriteLine(solution);
+                writeSolution(solution, method);
                 stopwatch.Stop();
                 Console.WriteLine("Solving time is {0} seconds\n", stopwatch.ElapsedMilliseconds / 1000.0);
             }
@@ -63,6 +66,25 @@ namespace sudokuProject
                 Console.WriteLine(ae.Message);
             }
             startController();
+        }
+        /// <summary>
+        /// writes the solution according to the method
+        /// </summary>
+        /// <param name="board">the board we write</param>
+        /// <param name="method"> the return method (console, file) </param>
+        public static void writeSolution(Board board, string method)
+        {
+            switch (method)
+            {
+                case "c":
+                    ConsoleWriter cWriter = new ConsoleWriter();
+                    cWriter.writeBoard(board);
+                    break;
+                case "f":
+                    FileWriter fWriter = new FileWriter();
+                    fWriter.writeBoard(board);
+                    break;
+            }
         }
     }
 }

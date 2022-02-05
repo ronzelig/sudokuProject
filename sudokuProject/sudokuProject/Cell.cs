@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    class Cell: IComparable
+    public class Cell: IComparable
     {
         public int row { get;}
         public int col { get;}

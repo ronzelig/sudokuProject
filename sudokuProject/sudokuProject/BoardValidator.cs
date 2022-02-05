@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace sudokuProject
 {
-    static class BoardValidator
+    public static class BoardValidator
     {
         /// <summary>
         /// send the board input to validation functions
