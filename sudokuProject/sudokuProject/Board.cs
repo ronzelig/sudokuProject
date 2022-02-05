@@ -19,6 +19,10 @@ namespace sudokuProject
         public int[,] colsOptions { get; set; }
         public int[,] squaresOptions { get; set; }
 
+        /// <summary>
+        /// initializes the board and the cells
+        /// </summary>
+        /// <param name="inputString"> the board input by the user we would like to solve </param>
         public Board(string inputString)
         {
             BoardValidator.validateInput(inputString);
@@ -36,7 +40,10 @@ namespace sudokuProject
             }
             BoardValidator.validateBoard(this);
         }
-
+        /// <summary>
+        /// copy constructor for the board. copies the property from the other board and creates a new one.
+        /// </summary>
+        /// <param name="other"> the board we copy </param>
         public Board(Board other)
         {
             dimensionSize = other.dimensionSize;
@@ -56,7 +63,9 @@ namespace sudokuProject
             }
         }
 
-
+        /// <summary>
+        /// initializse the matrixes properties. seperate from the constructor for comfort.
+        /// </summary>
         private void initMatrixes()
         {
             rowsValues = new int[dimensionSize+1,dimensionSize+1];
@@ -67,11 +76,18 @@ namespace sudokuProject
             squaresOptions = new int[dimensionSize+1, dimensionSize+1];           
         }
 
+        /// <summary>
+        /// checks if the board is solved(full)
+        /// </summary>
+        /// <returns> 0/1 (not solved/solved) </returns>
         public bool isSolved()
         {
             return emptyCells.Count == 0;
         }
-
+        /// <summary>
+        /// creates a string that represents the board for output.
+        /// </summary>
+        /// <returns> the string of the board </returns>
         public override string ToString()
         {
             string result = "";

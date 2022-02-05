@@ -15,6 +15,9 @@ namespace sudokuProject
                                     "e - end program";
         
         const string INVALID_INPUT_MESSAGE = "invalid input. try again:\n";
+        /// <summary>
+        /// prints the menu, gets the user's answer and continues according to the answer
+        /// </summary>
         public static void startController()
         {
             Console.WriteLine(MENU_MESSAGE);
@@ -25,10 +28,12 @@ namespace sudokuProject
                 case "c":
                     ConsoleReader cReader= new ConsoleReader();
                     boardInput = cReader.getBoard();
+                    Controller.startSolving(boardInput);
                     break;
                 case "f":
                     FileReader fReader = new FileReader();
                     boardInput = fReader.getBoard();
+                    Controller.startSolving(boardInput);
                     break;
                 case "e":
                     break;
@@ -37,8 +42,6 @@ namespace sudokuProject
                     startController();
                     break;
             }
-            if (answer != "e")
-                Controller.startSolving(boardInput);
         }
 
         private static void startSolving(string boardInput)
