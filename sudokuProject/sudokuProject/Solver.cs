@@ -16,27 +16,15 @@ namespace sudokuProject
             {
                     foreach (char option in cell.options.ToList())
                     {
-                        if (sudokuBoard.rowsValues[cell.row, option-'0']!=0 || 
-                            sudokuBoard.colsValues[cell.col,option-'0']!=0 || 
-                            sudokuBoard.squaresValues[cell.square,option-'0']!=0)
+                        if (optionNotLegal(option, cell, sudokuBoard))
                         {
-                            cell.options.Remove(option);
+                            deleteOption(option, cell, sudokuBoard);
                             eliminatedOptions = true;
-                            sudokuBoard.rowsOptions[cell.row, option - '0']--;
-                            sudokuBoard.colsOptions[cell.col, option - '0']--;
-                            sudokuBoard.squaresOptions[cell.square, option - '0']--;
                         }
                     }
                     if (cell.options.Count == 1)
                     {
-                        cell.value = cell.options[0];
-                        sudokuBoard.emptyCells.Remove(cell);
-                        sudokuBoard.rowsValues[cell.row, cell.value - '0']++;
-                        sudokuBoard.colsValues[cell.col, cell.value - '0']++;
-                        sudokuBoard.squaresValues[cell.square, cell.value - '0']++;
-                        sudokuBoard.rowsValues[cell.row, 0]--;
-                        sudokuBoard.colsValues[cell.col, 0]--;
-                        sudokuBoard.squaresValues[cell.square, 0]--;
+                        insertValue(cell, cell.options[0], sudokuBoard);
                     }
             }
             return eliminatedOptions;
@@ -44,103 +32,92 @@ namespace sudokuProject
 
         public static bool hiddenSingle(Board sudokuBoard)
         {
-            bool foundHidden = false;
+            bool foundHidden = false;            
             foreach(Cell cell in sudokuBoard.emptyCells.ToList())
             {
-                    foreach(char option in cell.options.ToList())
+                    foreach (char option in cell.options.ToList())
                     {
-                        if (sudokuBoard.rowsOptions[cell.row,option-'0'] == 1 ||
-                            sudokuBoard.colsOptions[cell.col,option-'0'] == 1 ||
-                            sudokuBoard.squaresOptions[cell.square,option-'0'] == 1)
+                        if (isHiddenSingle(option, cell, sudokuBoard))
                         {
-                            cell.value = option;
-                            sudokuBoard.emptyCells.Remove(cell);
-                            sudokuBoard.rowsValues[cell.row, option - '0']++;
-                            sudokuBoard.colsValues[cell.col, option - '0']++;
-                            sudokuBoard.squaresValues[cell.square, option - '0']++;
-                            sudokuBoard.rowsValues[cell.row, 0]--;
-                            sudokuBoard.colsValues[cell.col, 0]--;
-                            sudokuBoard.squaresValues[cell.square, 0]--;
                             foundHidden = true;
-                            foreach (char optionToDelete in cell.options.ToList())
-                            {
-                                if (optionToDelete != cell.value)
-                                {
-                                    sudokuBoard.rowsOptions[cell.row, optionToDelete - '0']--;
-                                    sudokuBoard.colsOptions[cell.col, optionToDelete - '0']--;
-                                    sudokuBoard.squaresOptions[cell.square, optionToDelete - '0']--;
-                                    cell.options.Remove(optionToDelete);
-                                }
-                            }
+                            insertValue(cell, option, sudokuBoard);
                             break;
                         }
                     }                
             }
             return foundHidden;
         }
-        public static Board backTracking(Board sudokuBoard)
+
+        public static Board solve(Board sudokuBoard)
         {
-            bool b1, b2;           
-            if (sudokuBoard.emptyCells.Count == 0)
+            runSimpleMethodsOnBoard(sudokuBoard);
+            if (sudokuBoard.isSolved())
             {
-                sudokuBoard.printBoard();
                 return sudokuBoard;
             }
             sudokuBoard.emptyCells.Sort();
             Cell cell = sudokuBoard.emptyCells[0];
-            foreach (char option in cell.options.ToList())
-            {
-                if (sudokuBoard.rowsValues[cell.row, option - '0'] == 0 &&
-                    sudokuBoard.colsValues[cell.col, option - '0'] == 0 &&
-                    sudokuBoard.squaresValues[cell.square, option - '0'] == 0)
-                {
-                    Board clone = new Board(sudokuBoard);
-                    Cell CloneCell = clone.board[cell.row, cell.col];
-                    CloneCell.value = option;
-                    clone.rowsValues[CloneCell.row, option - '0']++;
-                    clone.colsValues[CloneCell.col, option - '0']++;
-                    clone.squaresValues[CloneCell.square, option - '0']++;
-                    clone.emptyCells.Remove(CloneCell);
-                    foreach (char optionToDelete in CloneCell.options)
+            foreach (char option in cell.options)
+            {                
+                    Board copyBoard = new Board(sudokuBoard);
+                    Cell copyCell = copyBoard.board[cell.row, cell.col];
+                    insertValue(copyCell, option, copyBoard);
+                    Board result = solve(copyBoard);
+                    if (result != null)
                     {
-                        if (optionToDelete != CloneCell.value)
-                        {
-                            clone.rowsOptions[CloneCell.row, optionToDelete - '0']--;
-                            clone.colsOptions[CloneCell.col, optionToDelete - '0']--;
-                            clone.squaresOptions[CloneCell.square, optionToDelete - '0']--;
-                            //cell.options.Remove(optionToDelete);
-                        }
-                    }
-                    do
-                    {
-                        b1 = Solver.nakedSingle(clone);
-                        b2 = Solver.hiddenSingle(clone);
-                    }
-                    while (b1 || b2);
-                    if (Solver.backTracking(clone) != null)
-                    {
-                        return clone;
-                    }
-                    //else
-                    //{
-                    //    sudokuBoard.rowsValues[cell.row, option - '0']--;
-                    //    sudokuBoard.colsValues[cell.col, option - '0']--;
-                    //    sudokuBoard.squaresValues[cell.square, option - '0']--;
-                    //}
-                }
+                        return result;
+                    }               
             }
-            //cell.value = '0';
             return null;            
         }
 
-        //private static Cell findEmptyCell(Board sudokuBoard)
-        //{
-        //    foreach(Cell cell in sudokuBoard.board)
-        //    {
-        //        if (cell.isEmpty())
-        //            return cell;
-        //    }
-        //    return null;
-        //}
+        public static void runSimpleMethodsOnBoard(Board board)
+        {
+            bool nakedSingleHelped, hiddenSingleHelped;
+            do
+            {
+                nakedSingleHelped = nakedSingle(board);
+                hiddenSingleHelped = hiddenSingle(board);
+            }
+            while (nakedSingleHelped || hiddenSingleHelped);
+        }
+
+        public static void insertValue(Cell cell, char val, Board board)
+        {
+            cell.value = val;
+            board.rowsValues[cell.row, val - '0']++;
+            board.colsValues[cell.col, val - '0']++;
+            board.squaresValues[cell.square, val - '0']++;
+            foreach (char optionToDelete in cell.options.ToList())
+            {
+                if (optionToDelete != cell.value)
+                {
+                    deleteOption(optionToDelete, cell, board);
+                }
+            }
+            board.emptyCells.Remove(cell);
+        } 
+
+        public static void deleteOption(char option, Cell cell, Board board)
+        {
+            board.rowsOptions[cell.row, option - '0']--;
+            board.colsOptions[cell.col, option - '0']--;
+            board.squaresOptions[cell.square, option - '0']--;
+            cell.options.Remove(option);
+        }
+
+        public static bool isHiddenSingle(char option, Cell cell, Board board)
+        {
+            return  board.rowsOptions[cell.row, option - '0'] == 1 ||
+                    board.colsOptions[cell.col, option - '0'] == 1 ||
+                    board.squaresOptions[cell.square, option - '0'] == 1;
+        }
+
+        public static bool optionNotLegal(char option, Cell cell, Board board)
+        {
+            return  board.rowsValues[cell.row, option - '0'] != 0 ||
+                    board.colsValues[cell.col, option - '0'] != 0 ||
+                    board.squaresValues[cell.square, option - '0'] != 0;
+        }
     }
 }

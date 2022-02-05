@@ -32,9 +32,12 @@ namespace sudokuProject
                 }
                 board.emptyCells.Add(this);
             }
-            board.rowsValues[row, value - '0']++;
-            board.colsValues[col, value - '0']++;
-            board.squaresValues[square, value - '0']++;
+            else
+            {
+                board.rowsValues[row, value - '0']++;
+                board.colsValues[col, value - '0']++;
+                board.squaresValues[square, value - '0']++;
+            }
         }
 
         public Cell(Cell other)
@@ -63,20 +66,6 @@ namespace sudokuProject
         public override string ToString()
         {
             return char.ToString(value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            //Check for null and compare types.
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Cell other = (Cell)obj;
-                return other.value == this.value;
-            }
         }
 
         public int CompareTo(object obj)

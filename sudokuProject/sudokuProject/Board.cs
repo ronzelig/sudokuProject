@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace sudokuProject
             squaresOptions = (int[,])other.squaresOptions.Clone();
             board = new Cell[dimensionSize, dimensionSize];
             emptyCells = new List<Cell>();
-            foreach(Cell cell in other.board)
+            foreach (Cell cell in other.board)
             {
                 board[cell.row, cell.col] = new Cell(cell);
                 if (cell.isEmpty())
@@ -61,23 +62,29 @@ namespace sudokuProject
             squaresValues = new int[dimensionSize+1, dimensionSize+1];
             rowsOptions = new int[dimensionSize+1, dimensionSize+1];
             colsOptions = new int[dimensionSize+1, dimensionSize+1];
-            squaresOptions = new int[dimensionSize+1, dimensionSize+1];
-            
+            squaresOptions = new int[dimensionSize+1, dimensionSize+1];           
         }
 
-        public void printBoard()
+        public bool isSolved()
         {
-            String rowLine = (new string('-', dimensionSize*4+1));
+            return emptyCells.Count == 0;
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+            string rowLine = (new string('-', dimensionSize*4+1) + "\n");
             for (int row = 0; row < dimensionSize; row++)
             {
-                Console.WriteLine(rowLine);
+                result += (rowLine);
                 for (int col = 0; col < dimensionSize; col++)
                 {
-                      Console.Write("| "+ (board[row, col].isEmpty()? " ": board[row,col]) +" ");
+                      result += ("| "+ (board[row, col].isEmpty()? " ": board[row,col]) +" ");
                 }
-                Console.WriteLine("|");
+                result += ("|\n");
             }
-            Console.WriteLine(rowLine);
+            result += (rowLine);
+            return result;
         }
 
     }
